@@ -1,0 +1,23 @@
+{
+	"author": "TimNew (timnew.github.com)",
+	"name": "routeCall",
+	"description": "Route method call according to a given path",
+	"version": "0.1.0",
+	"homepage": "github.com/timnew/routeCall",
+	"repository": {
+		"url": "github.com/timnew/routeCall.git"
+	},
+	"scripts": {
+		"test": "cake test"
+	},
+ 	"dependencies": {},
+	"devDependencies": {
+		"coffee-script": "*",
+		"chai": "*",
+		"mocha":"*"
+	},
+	"optionalDependencies": {},
+	"engines": {
+		"node": "*"
+	}
+}
