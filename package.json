@@ -3,9 +3,9 @@
 	"name": "routeMessage",
 	"description": "Route method call according to a given path",
 	"version": "0.1.0",
-	"homepage": "github.com/timnew/routeMessage",
+	"homepage": "https://github.com/timnew/routeMessage",
 	"repository": {
-		"url": "github.com/timnew/routeMessage.git"
+		"url": "git://github.com/timnew/routeMessage.git"
 	},
 	"scripts": {
 		"test": "rake test"
