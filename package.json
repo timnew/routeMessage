@@ -10,9 +10,10 @@
 	"scripts": {
 		"test": "rake test"
 	},
- 	"dependencies": {},
+ 	"dependencies": {
+		"coffee-script": "*"
+	},
 	"devDependencies": {
-		"coffee-script": "*",
 		"chai": "*",
 		"mocha":"*"
 	},
