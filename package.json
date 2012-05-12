@@ -1,14 +1,14 @@
 {
-	"author": "TimNew (timnew.github.com)",
-	"name": "routeCall",
+	"author": "TimNew (http://timnew.github.com)",
+	"name": "routeMessage",
 	"description": "Route method call according to a given path",
 	"version": "0.1.0",
-	"homepage": "github.com/timnew/routeCall",
+	"homepage": "github.com/timnew/routeMessage",
 	"repository": {
-		"url": "github.com/timnew/routeCall.git"
+		"url": "github.com/timnew/routeMessage.git"
 	},
 	"scripts": {
-		"test": "cake test"
+		"test": "rake test"
 	},
  	"dependencies": {},
 	"devDependencies": {

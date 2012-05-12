@@ -7,6 +7,18 @@ desc "Start development environment"
 task :dev => ["dev:mate", "dev:test"] do
 end
 
+desc "Start development environment"
+task :dev => ["dev:mate", "dev:test"] do
+end
+
+namespace :build do
+  desc "Build Javscript verison lib"
+  task :js do
+    sh "coffee -c -o jsLib/ lib"
+  end 
+end
+
+
 namespace :dev do
   desc "Run Unit Test in watch mode"
   task :test do
