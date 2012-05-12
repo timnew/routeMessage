@@ -1,7 +1,11 @@
 class Message
-	constructor: (path, params...) ->
-		@path = path.split('.')
-		@params = params
+	constructor: (address, @params...) ->
+		parts = address.split(':')
+		@routes = parts[..-2]
+		@path = parts[parts.length - 1].split('.')
+
+	route: =>
+		@routes.shift()
 
 	deliverTo: (context, explictHost = null) =>
 		[host,action] = Message.locate(context, @path)
