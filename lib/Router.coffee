@@ -1,6 +1,11 @@
 require 'coffee-script'
 Message = require './Message.coffee'
 
+class Envolop
+ 	
+Envolop.newId = ->
+	Envolop.lastId = (Envolop.lastId + 1) % 65535
+
 class Router
 	constructor: (@context, @name)->
 		@routes = { }

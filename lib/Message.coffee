@@ -41,6 +41,7 @@ Message.locate = (context, localPath) ->
 Message.deserialize = (json) ->
 	message = JSON.parse(json)
 	message.__proto__ = Message.prototype
+	message.constructor = Message
 	message
 
 exports = module.exports = Message

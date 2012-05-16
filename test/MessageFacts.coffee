@@ -54,6 +54,16 @@ describe "Message", ->
 			
 	# end "Object Construction"
 	
+	describe "Serialization", ->
+		it "Deserialized message should be still Message", ->
+			message = new Message("foo:bar")
+			messageClone = Message.deserialize(message.serialize())
+			
+			messageClone.__proto__.should.equal Message.prototype 
+			messageClone.should.be.instanceof(Message)
+			
+	#end "Serialization"
+	
 	describe "Basic delivery", ->
 	
 		it "Action should be located according to given path", ->
