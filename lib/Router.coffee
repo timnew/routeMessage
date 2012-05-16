@@ -5,6 +5,7 @@ class Router
 	constructor: (@context, @name)->
 		@routes = { }
 		@lastId = 0
+		@callbackPool = { }
 		
 	register: (name, option) ->
 		option = { sender: option, needSerialize: false } if typeof(option) is "function"
@@ -16,18 +17,31 @@ class Router
 	getMessageId: =>
 		@lastId = (@lastId + 1) % 65535
 	
-	send: (dest, message) =>
+	send: (dest, message, callbackId = null) =>
 		route = @routes[dest]	
 		throw "Invalid Route" unless route?
 		
-		envolop = {
-			message: if route.serialize then message.serialize() else message
-			needCallback: message.callback?
-			id: this.getMessageId()
-			from: @name
-		}
+		if callbackId? 
+			envolop = {
+				message: message
+				hasCallback : false
+				id: callbackId
+				isCallback: true
+				from: @name
+			}
+		else
+			envolop = {
+				message: if route.serialize then message.serialize() else message
+				hasCallback: message.callback?
+				id: this.getMessageId()
+				isCallback: false
+				from: @name
+			}
+		
+		@callbackPool[envolop.id] = envolop.message.callback if envolop.hasCallback 
 		
 		envolop = JSON.stringify(envolop) if route.serialize 
+		
 		route.sender.call(this, envolop, dest)	
 	 	 
 	recieve: (envolop) =>
@@ -36,8 +50,17 @@ class Router
 			envolop = JSON.parse envolop
 			envolop.message = Message.deserialize envolop.message
 		
-		this.route envolop.message
-	
+		if envolop.hasCallback
+			sendCallback = this.send
+			envolop.message.callback = (args...) ->
+				sendCallback envolop.from, args, envolop.id
+		
+		if envolop.isCallback
+			@callbackPool[envolop.id].apply(null, envolop.message)
+			delete @callbackPool[envolop.id]
+		else	
+			this.route envolop.message
+			
 	route: (message) =>
 		return message.deliverTo @context if message.routes.length == 0;
 		

@@ -61,14 +61,15 @@ describe "Router", ->
 		router1.route(message)
 	
 
-	xit "callback route", (done) ->
+	it "callback route", (done) ->
 		context = 
 			dest: (arg) ->
 				arg.should.equal('arg')
 				"callback #{arg}"
 		
 		callback = (res) ->
-			res.should.equal('callback arg')
+			res.should.equal 'callback arg'
+			done()
 
 		message = new Message({ fullPath: "foo:dest", callback: callback }, 'arg')
 
