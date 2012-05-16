@@ -8,7 +8,7 @@ class Router
 		@callbackPool = { }
 		
 	register: (name, option) ->
-		option = { sender: option, needSerialize: false } if typeof(option) is "function"
+		option = { sender: option, serialize: false } if typeof(option) is "function"
 		@routes[name] = option
 		
 	unregister: (name) ->
@@ -23,7 +23,7 @@ class Router
 		
 		if callbackId? 
 			envolop = {
-				message: message
+				message: if route.serialize then JSON.stringify(message) else message
 				hasCallback : false
 				id: callbackId
 				isCallback: true
@@ -38,7 +38,7 @@ class Router
 				from: @name
 			}
 		
-		@callbackPool[envolop.id] = envolop.message.callback if envolop.hasCallback 
+		@callbackPool[envolop.id] = message.callback if envolop.hasCallback 
 		
 		envolop = JSON.stringify(envolop) if route.serialize 
 		
@@ -48,7 +48,10 @@ class Router
 		serialized = typeof(envolop) is 'string'
 		if serialized
 			envolop = JSON.parse envolop
-			envolop.message = Message.deserialize envolop.message
+			if envolop.isCallback
+				envolop.message = JSON.parse envolop.message
+			else
+				envolop.message = Message.deserialize envolop.message
 		
 		if envolop.hasCallback
 			sendCallback = this.send

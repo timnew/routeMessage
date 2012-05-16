@@ -41,7 +41,7 @@ describe "Router", ->
 
 		router1.route(message)
 		
-	it "serialize route", (done) ->
+	it "serialized route", (done) ->
 		context = 
 			verify: (arg) ->
 				arg.should.equal('arg')
@@ -82,4 +82,33 @@ describe "Router", ->
 		router2.register "base", (payload) ->
 			router1.recieve payload 
 
+		router1.route(message)
+		
+	it "searialized callback route", (done) ->
+		context = 
+			dest: (arg) ->
+				arg.should.equal('arg')
+				"callback #{arg}"
+		
+		callback = (res) ->
+			res.should.equal 'callback arg'
+			done()
+
+		message = new Message({ fullPath: "foo:dest", callback: callback }, 'arg')
+
+		router1 = new Router(null, "base")
+		router2 = new Router(context, "foo")
+
+		router1.register "foo", { 
+			serialize: true
+			sender:	(payload) -> 
+				router2.recieve payload
+		}
+		
+		router2.register "base", {
+			serialize: true
+			sender: (payload) ->
+				router1.recieve payload 
+		}
+		
 		router1.route(message)
