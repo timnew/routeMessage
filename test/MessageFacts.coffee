@@ -14,42 +14,42 @@ describe "Message", ->
 			message = new Message "aa:bb:cc:obj.action", 1, 2, 3, 4, 5
 			
 			message.localPath.should.eql ["obj", "action"]
-			message.routes.should.eql ["aa","bb","cc"]
-			message.params.should.eql [1..5]
+			message.foriegnPath.should.eql ["aa","bb","cc"]
+			message.args.should.eql [1..5]
 		
 		it "Message with local path should be constructed correctly", ->
 			message = new Message "obj.subObj.action", 1, 2, 3, 4, 5
 			
 			message.localPath.should.eql ["obj", "subObj", "action"]
-			message.routes.should.eql []
-			message.params.should.eql [1..5]
+			message.foriegnPath.should.eql []
+			message.args.should.eql [1..5]
 		
 		it "Message should be initialized correctly with options", ->
 			callback = ->
-			params = [1..5]
+			args = [1..5]
 			message = new Message {
 				fullPath: "aa:bb:obj.action"
 				callback: callback
-				params: params
+				args: args
 			}
 			
 			message.localPath.should.eql ["obj", "action"]
-			message.routes.should.eql ["aa","bb"]
-			message.params.should.eql [1..5]
+			message.foriegnPath.should.eql ["aa","bb"]
+			message.args.should.eql [1..5]
 			message.callback.should.equal callback
 			
-		it "Explicit params should overides the one in options", ->
+		it "Explicit args should overides the one in options", ->
 			callback = ->
-			params = [1..5]
+			args = [1..5]
 			message = new Message {
 				fullPath: "aa:bb:obj.action"
 				callback: callback
-				params: params
+				args: args
 			}, "a", "b", "c"
 
 			message.localPath.should.eql ["obj", "action"]
-			message.routes.should.eql ["aa","bb"]
-			message.params.should.eql ["a", "b", "c"]
+			message.foriegnPath.should.eql ["aa","bb"]
+			message.args.should.eql ["a", "b", "c"]
 			message.callback.should.equal callback
 			
 	# end "Object Construction"
@@ -160,7 +160,7 @@ describe "Message", ->
 		it "Serialization", (done) ->
 			expectedArgs = [ {a:{b:{c:"xx"}}}, 1.5, "3", [1..5] ]
 			message = new Message("func")
-			message.params = expectedArgs
+			message.args = expectedArgs
 
 			messageClone = Message.deserialize message.serialize()
 			
@@ -186,5 +186,5 @@ describe "Message", ->
 
 			message = new Message({ fullPath: "plusOne", callback: context.assert }, 4)
 			message.deliverTo context
-
+		
 	# end "Route delivery"

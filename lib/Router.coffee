@@ -1,10 +1,37 @@
 require 'coffee-script'
 Message = require './Message.coffee'
 
-class Envolop
- 	
-Envolop.newId = ->
-	Envolop.lastId = (Envolop.lastId + 1) % 65535
+# class Envolop
+# 	constructor: (@payload, @id = Envolop.newId()) ->
+# 		@payloadType = if @payload instanceof Message then "message" else "generic"
+# 		
+# 	serialize: => 
+# 		payload = @payload
+# 		@payload = Envolop.serializers[@payloadType].serializer(@payload)
+# 		json = JSON.stringify this
+# 		@payload = payload
+# 		json
+# 
+# Envolop.serializers = 
+# 	message: 
+# 	    serializer: (message) -> 
+# 			message.serialize()
+# 		deserializer: (json) ->
+# 			Message.deserialize(json)
+# 	generic: 
+# 	    serializer: (payload) -> 
+# 			JSON.stringify(payload)
+# 		deserializer: (json) ->
+# 			JSON.parse(json)
+# 
+# Envolop.deserialize = (json) ->
+# 	envolop = JSON.parse(envolop)
+# 	envolop.payload = Envolop.serializers[envolop.payloadType].deserializer(envolop.payload)
+# 	envolop
+# 	
+# Envolop.lastId = 0	
+# Envolop.newId = ->
+# 	Envolop.lastId = (Envolop.lastId + 1) % 65535
 
 class Router
 	constructor: (@context, @name)->
@@ -70,9 +97,9 @@ class Router
 			this.route envolop.message
 			
 	route: (message) =>
-		return message.deliverTo @context if message.routes.length == 0;
+		return message.deliverTo @context if message.foriegnPath.length == 0;
 		
-		dest = message.routes.shift()
+		dest = message.foriegnPath.shift()
 
 		return message.deliverTo @context if dest == @name
 		

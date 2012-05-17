@@ -1,22 +1,22 @@
 class Message
-	constructor: (option, params...) ->
+	constructor: (option, args...) ->
 		if typeof(option) is 'string' 
 			fullPath = option
 			@callback = null
-			@params = []
+			@args = []
 		else 
 			fullPath = option.fullPath
 			@callback = if option.callback? then option.callback else null
-			@params = if option.params? then option.params else []
+			@args = if option.args? then option.args else []
 		 
-		[@routes, @localPath] = Message.parsePath fullPath
-		@params = params if params.length > 0
+		[@foriegnPath, @localPath] = Message.parsePath fullPath
+		@args = args if args.length > 0
 
 	deliverTo: (context, explictHost = null) =>
 		[host,action] = Message.locate(context, @localPath)
 		host = explictHost if explictHost?
 
-		result = action.apply(host, @params)
+		result = action.apply(host, @args)
 		
 		@callback(result) if @callback?
 		
