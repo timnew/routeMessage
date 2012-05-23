@@ -25,32 +25,32 @@ describe "Message", ->
 			message.args.should.eql [1..5]
 		
 		it "Message should be initialized correctly with options", ->
-			callback = ->
+			returnCallback = ->
 			args = [1..5]
 			message = new Message {
 				fullPath: "aa:bb:obj.action"
-				callback: callback
+				returnCallback: returnCallback
 				args: args
 			}
 			
 			message.localPath.should.eql ["obj", "action"]
 			message.foriegnPath.should.eql ["aa","bb"]
 			message.args.should.eql [1..5]
-			message.callback.should.equal callback
+			message.returnCallback.should.equal returnCallback
 			
 		it "Explicit args should overides the one in options", ->
-			callback = ->
+			returnCallback = ->
 			args = [1..5]
 			message = new Message {
 				fullPath: "aa:bb:obj.action"
-				callback: callback
+				returnCallback: returnCallback
 				args: args
 			}, "a", "b", "c"
 
 			message.localPath.should.eql ["obj", "action"]
 			message.foriegnPath.should.eql ["aa","bb"]
 			message.args.should.eql ["a", "b", "c"]
-			message.callback.should.equal callback
+			message.returnCallback.should.equal returnCallback
 			
 	# end "Object Construction"
 	
@@ -59,7 +59,6 @@ describe "Message", ->
 			message = new Message("foo:bar")
 			messageClone = Message.deserialize(message.serialize())
 			
-			messageClone.__proto__.should.equal Message.prototype 
 			messageClone.should.be.instanceof(Message)
 			
 	#end "Serialization"
@@ -184,7 +183,7 @@ describe "Message", ->
 				plusOne: (num) ->
 					num + 1
 
-			message = new Message({ fullPath: "plusOne", callback: context.assert }, 4)
+			message = new Message({ fullPath: "plusOne", returnCallback: context.assert }, 4)
 			message.deliverTo context
 		
 	# end "Route delivery"

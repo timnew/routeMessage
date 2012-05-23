@@ -1,37 +1,6 @@
 require 'coffee-script'
 Message = require './Message.coffee'
-
-# class Envolop
-# 	constructor: (@payload, @id = Envolop.newId()) ->
-# 		@payloadType = if @payload instanceof Message then "message" else "generic"
-# 		
-# 	serialize: => 
-# 		payload = @payload
-# 		@payload = Envolop.serializers[@payloadType].serializer(@payload)
-# 		json = JSON.stringify this
-# 		@payload = payload
-# 		json
-# 
-# Envolop.serializers = 
-# 	message: 
-# 	    serializer: (message) -> 
-# 			message.serialize()
-# 		deserializer: (json) ->
-# 			Message.deserialize(json)
-# 	generic: 
-# 	    serializer: (payload) -> 
-# 			JSON.stringify(payload)
-# 		deserializer: (json) ->
-# 			JSON.parse(json)
-# 
-# Envolop.deserialize = (json) ->
-# 	envolop = JSON.parse(envolop)
-# 	envolop.payload = Envolop.serializers[envolop.payloadType].deserializer(envolop.payload)
-# 	envolop
-# 	
-# Envolop.lastId = 0	
-# Envolop.newId = ->
-# 	Envolop.lastId = (Envolop.lastId + 1) % 65535
+Envolop = require './Envolop.coffee'
 
 class Router
 	constructor: (@context, @name)->
@@ -39,11 +8,11 @@ class Router
 		@lastId = 0
 		@callbackPool = { }
 		
-	register: (name, option) ->
+	registerRoute: (name, option) ->
 		option = { sender: option, serialize: false } if typeof(option) is "function"
 		@routes[name] = option
 		
-	unregister: (name) ->
+	unregisterRoute: (name) ->
 		delete @routes[name]
 	
 	getMessageId: =>
@@ -64,13 +33,13 @@ class Router
 		else
 			envolop = {
 				message: if route.serialize then message.serialize() else message
-				hasCallback: message.callback?
+				hasCallback: message.returnCallback?
 				id: this.getMessageId()
 				isCallback: false
 				from: @name
 			}
 		
-		@callbackPool[envolop.id] = message.callback if envolop.hasCallback 
+		@callbackPool[envolop.id] = message.returnCallback if envolop.hasCallback 
 		
 		envolop = JSON.stringify(envolop) if route.serialize 
 		
@@ -87,7 +56,7 @@ class Router
 		
 		if envolop.hasCallback
 			sendCallback = this.send
-			envolop.message.callback = (args...) ->
+			envolop.message.returnCallback = (args...) ->
 				sendCallback envolop.from, args, envolop.id
 		
 		if envolop.isCallback

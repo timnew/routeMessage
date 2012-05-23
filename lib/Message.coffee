@@ -2,11 +2,11 @@ class Message
 	constructor: (option, args...) ->
 		if typeof(option) is 'string' 
 			fullPath = option
-			@callback = null
+			@returnCallback = null
 			@args = []
 		else 
 			fullPath = option.fullPath
-			@callback = if option.callback? then option.callback else null
+			@returnCallback = if option.returnCallback? then option.returnCallback else null
 			@args = if option.args? then option.args else []
 		 
 		[@foriegnPath, @localPath] = Message.parsePath fullPath
@@ -18,7 +18,7 @@ class Message
 
 		result = action.apply(host, @args)
 		
-		@callback(result) if @callback?
+		@returnCallback(result) if @returnCallback?
 		
 	serialize: =>
 		JSON.stringify this
